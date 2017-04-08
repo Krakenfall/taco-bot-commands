@@ -1,0 +1,7 @@
+# comment 
+	*git*
+	node_modules
+	README.md
+	*.log
+	LICENSE
+	Dockerfile*
