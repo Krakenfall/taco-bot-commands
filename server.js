@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 
 // Handle root
 app.get('/', function(req, res) {
-	res.redirect(`http://${config.domain}/list.html`);
+	res.redirect(`http://${config.domain}/index.html`);
 });
 
 // Return log, should this be an admin call?
