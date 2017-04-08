@@ -8,7 +8,7 @@ var log = function(data, file, logInConsole) {
 	if (file) {
 		logFile = file;
 	} else {
-		logFile = "nodeserver.log";
+		logFile = "server.log";
 	}
 	try {
 		fs.appendFileSync(logFile, new Date() + "\r\n");

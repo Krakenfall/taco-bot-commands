@@ -44,8 +44,12 @@ var pickRandom = function(cmdObject) {
 	return rnged[0];
 }
 
-var findCommand = function(cmd, name) {
-	return cmd.name = name;
+var searchByName = function(name, array) {
+	for (var i = 0; i < array.length; i++) {
+		if (array[i].name === name) {
+			return array[i]
+		}
+	}
 };
 
 var processCommand = function(inputCommand, post) {
@@ -53,7 +57,7 @@ var processCommand = function(inputCommand, post) {
 		if (error) {
 			apputil.log(`Error retrieving commands: ${error}`);
 		} else {
-			var result = commands.find(findCommand, inputCommand.toLowerCase());
+			var result = searchByName(inputCommand.toLowerCase(), commands);
 			if (result) {
 				var reply;
 				if (result.selectRandom) {
@@ -92,8 +96,6 @@ var isIgnoredAccount = function(groupmePost) {
 }
 
 module.exports = {
-
-	update : updateCommands,
 
 	investigate: function(groupmePost) {
 		if (isIgnoredAccount(groupmePost))
