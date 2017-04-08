@@ -52,7 +52,9 @@ app.get("/commands", function(req, res) {
 		if (error) {
 			apputil.log(`Error retrieving commands: ${error}`);
 		} else {
-			res.send(JSON.stringify(results));
+			console.log(`Sent commands to ${req.ip}`);
+			res.setHeader('Content-Type', 'application/json');
+			res.jsonp(results);
 		}
 	});	
 });
