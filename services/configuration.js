@@ -5,7 +5,7 @@ var util = require('util');
 var configFileStats = null;
 var config = null;
 
-const CONFIG_FILE_NAME = 'appconfig.json';
+const CONFIG_FILE_NAME = 'config.json';
 
 
 function loadConfiguration (ConfigFileName) {
