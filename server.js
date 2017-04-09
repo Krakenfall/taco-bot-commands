@@ -24,7 +24,9 @@ app.use(bodyParser.json());
 
 // Handle root
 app.get('/', function(req, res) {
-	res.redirect(`http://${config.domain}/index.html`);
+	if (config.tacoBotWebUrl) { res.redirect(`${config.tacoBotWebUrl}`); }
+	else { res.send("invalid request"); }
+	
 });
 
 // Return log, should this be an admin call?
