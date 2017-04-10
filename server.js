@@ -26,7 +26,6 @@ app.use(bodyParser.json());
 app.get('/', function(req, res) {
 	if (config.tacoBotWebUrl) { res.redirect(`${config.tacoBotWebUrl}`); }
 	else { res.send("invalid request"); }
-	
 });
 
 // Return log, should this be an admin call?
@@ -54,7 +53,6 @@ app.get("/commands", function(req, res) {
 		if (error) {
 			apputil.log(`Error retrieving commands: ${error}`);
 		} else {
-			console.log(`Sent commands to ${req.ip}`);
 			res.setHeader('Content-Type', 'application/json');
 			res.jsonp(results);
 		}
