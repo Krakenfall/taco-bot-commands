@@ -14,5 +14,5 @@ script:
 after_success:
 - eval $(aws ecr get-login --region eu-west-1)
 - docker build -t taco-bot/commands:latest -t taco-bot/commands:1.0.$TRAVIS_BUILD_NUMBER .
-- docker tag taco-bot/commands:latest 869640726279.dkr.ecr.us-west-2.amazonaws.com/taco-bot/commands:latest
-- docker push 869640726279.dkr.ecr.us-west-2.amazonaws.com/taco-bot/commands:latest
+- docker tag taco-bot/commands:latest "869640726279.dkr.ecr.us-west-2.amazonaws.com/taco-bot/commands:latest"
+- docker push "869640726279.dkr.ecr.us-west-2.amazonaws.com/taco-bot/commands:latest"
