@@ -11,6 +11,6 @@ before_install:
 - export PATH=$PATH:$HOME/.local/bin
 script:
 - echo 'I should write some tests...'
-- eval $(aws ecr get-login --region eu-west-1)
+- eval $(aws ecr get-login --region us-west-2)
 - docker build -t taco-bot-commands:latest -t taco-bot-commands:1.0.$TRAVIS_BUILD_NUMBER -t "869640726279.dkr.ecr.us-west-2.amazonaws.com/taco-bot-commands:latest" .
 - docker push "869640726279.dkr.ecr.us-west-2.amazonaws.com/taco-bot-commands:latest"
