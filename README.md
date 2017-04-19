@@ -1,8 +1,6 @@
 # taco-bot-commands
 Taco-bot-commands is a node.js-based bot for GroupMe that replies to user-posted chat commands. Taco-bot-commands works as one part of taco-bot along with taco-bot-news and taco-bot-web to provide a Destiny companion for social groups. This bot was made for the Destiny clan "DeltaCo 71".
 
-### Taco-Bot is under-going a full rewrite using what I've learned in the past year. Updates to come.
-
 
 # Taco-bot Layout
 Taco Bot is actually made of several pieces:
