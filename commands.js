@@ -21,7 +21,7 @@ var sortObject = function (o) {
 
 // Look for segments of a message that have an exclamation followed by one or
 // more alphaneumeric characters
-var parseMessage = function(message) {
+var parseMessage = function(message, callback) {
 	var pattern = /\!([a-zA-Z0-9]+)/g;
 	var matches = message.match(pattern);
 
@@ -34,9 +34,9 @@ var parseMessage = function(message) {
 		// if no matches are found, return an empty array
 		// this makes it easier for the function's clients to handle because they
 		// do not have to worry about nulls.
-		return [];
+		callback(null, []);
 	}
-	return matches;
+	callback(null, matches);
 };
 
 var pickRandom = function(cmdObject) {
@@ -106,9 +106,10 @@ module.exports = {
 		}
 
 		// find commands in the text of the groupme message and process them
-		var inputCommands = parseMessage(groupmePost.text);
-		for (var i = 0; i < inputCommands.length; i++) {
-			processCommand(inputCommands[i], groupmePost);
-		}
+		parseMessage(groupmePost.text, function(err, inputCommands) {
+			for (var i = 0; i < inputCommands.length; i++) {
+				processCommand(inputCommands[i], groupmePost);
+			}
+		});
 	}
 };
