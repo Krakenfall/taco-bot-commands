@@ -66,7 +66,7 @@ var processCommand = function(inputCommand, post) {
 					reply = result.value[0];
 				}
 				if (reply) {
-					apputil.groupme_text_post(reply, function(e, r){
+					apputil.groupme_text_post(reply, post.group_id, function(e, r){
 						if (!e) {
 							apputil.log(r);
 						} else {
