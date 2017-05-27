@@ -3,6 +3,7 @@ var http = require('http');
 var request = require('request');
 var apputil = require("./util.js");
 var db = require('./db.js');
+var Promise = require('bluebird');
 
 var sortObject = function (o) {
     var sorted = {},
@@ -52,35 +53,29 @@ var searchByName = function(name, array) {
 	}
 };
 
-var processCommand = function(inputCommand, post) {
-	db.get().collection("commands").find().toArray(function(error, commands) {
-		if (error) {
-			apputil.log(`Error retrieving commands: ${error}`);
+var processCommand = function(inputCommand, commands, post) {
+	var result = searchByName(inputCommand.toLowerCase(), commands);
+	if (result) {
+		var reply;
+		if (result.selectRandom) {
+			reply = pickRandom(result);
 		} else {
-			var result = searchByName(inputCommand.toLowerCase(), commands);
-			if (result) {
-				var reply;
-				if (result.selectRandom) {
-					reply = pickRandom(result);
-				} else {
-					reply = result.value[0];
-				}
-				if (reply) {
-					apputil.groupme_text_post(reply, post.group_id, function(e, r){
-						if (!e) {
-							apputil.log(r);
-						} else {
-							apputil.log(e);
-						}
-					});
-				} else {
-					apputil.log(`Failed to select a reply to command ${inputCommand.toLowerCase()}`);
-				}
-			} else {
-				apputil.log(`Command from ${post.name} (ID: ${post.sender_id}) not found: ${inputCommand.toLowerCase()}`);
-			}			
+			reply = result.value[0];
 		}
-	});
+		if (reply) {
+			apputil.groupme_text_post(reply, post.group_id, function(e, r){
+				if (!e) {
+					apputil.log(r);
+				} else {
+					apputil.log(e);
+				}
+			});
+		} else {
+			apputil.log(`Failed to select a reply to command ${inputCommand.toLowerCase()}`);
+		}
+	} else {
+		apputil.log(`Command from ${post.name} (ID: ${post.sender_id}) not found: ${inputCommand.toLowerCase()}`);
+	}
 };
 
 // Check for known ignored accounts (bots, kuranden, etc)
@@ -106,10 +101,16 @@ module.exports = {
 		}
 
 		// find commands in the text of the groupme message and process them
-		parseMessage(groupmePost.text, function(err, inputCommands) {
-			for (var i = 0; i < inputCommands.length; i++) {
-				processCommand(inputCommands[i], groupmePost);
-			}
+		parseMessage(groupmePost.text, function(err, inputCommands) {			
+			db.get().collection("commands").find().toArray(function(error, commands) {
+				if (error) {
+					apputil.log(`Error retrieving commands: ${error}`);
+				} else {
+					for (var i = 0; i < inputCommands.length; i++) {
+						processCommand(inputCommands[i], commands, groupmePost);
+					}
+				}
+			});
 		});
 	}
 };
