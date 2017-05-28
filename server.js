@@ -3,6 +3,8 @@ var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
 var express = require('express');
 var bodyParser = require('body-parser');
+var Discord = require("discord.js");
+var bot = new Discord.Client();
 
 // Local dependencies
 var configService = require('./services/configuration.js');
@@ -85,6 +87,14 @@ app.use(function(err, req, res, next) {
 	res.status(500).send('Something broke!');
 });
 
+bot.on("message", msg => {
+	commandsController.investigate(msg.content, function(err, replies){		
+		for(var i = 0; i < replies.length; i++) {
+			msg.channel.sendMessage(replies[i]);
+		}
+	});
+});
+
 db.connect(config.mongoConnectionString, function(err) {
 	if (err) {
 		apputil.log(`Unable to connect to mongo. Error:\r\n${err}`);
@@ -94,5 +104,11 @@ db.connect(config.mongoConnectionString, function(err) {
 
 	app.listen(config.port, function () {
 		apputil.log("Server listening on port " + config.port, null, true);
-	});	
+	});
+
+	bot.on('ready', () => {
+	  apputil.log('Discord bot ready');
+	});
 });
+
+bot.login(config.discord.token);
