@@ -38,6 +38,18 @@ function announceError(source, message, callback) {
 	callback(logMessage);
 }
 
+// Check for known ignored accounts (bots, kuranden, etc)
+// TODO: Move some of this into configuration maybe?
+var isIgnoredGroupMeAccount = function(groupmePost) {
+	var senderId = groupmePost.sender_id;
+	var senderType = groupmePost.sender_type;
+
+	return senderId === "329044"
+		|| senderId === "329214"
+		|| senderId === "356826"
+		|| senderType === "bot" // ignore all bot posts, we may want to relax this restriction in the future
+}
+
 var groupme_text_post = function(text, groupId, callback) {
 	var bot = null;
 	db.get().collection("bots").find().toArray(function(error, bots) {
@@ -77,6 +89,7 @@ function shuffle(list) {
 
 module.exports = {
 	readFile: getFileContents,
+	isIgnoredGroupMeAccount: isIgnoredGroupMeAccount,
 	groupme_text_post: groupme_text_post,
 	log: log,
 	shuffle: shuffle
