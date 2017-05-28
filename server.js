@@ -90,7 +90,7 @@ app.use(function(err, req, res, next) {
 bot.on("message", msg => {
 	commandsController.investigate(msg.content, function(err, replies){		
 		for(var i = 0; i < replies.length; i++) {
-			msg.channel.sendMessage(replies[i]);
+			msg.channel.send(replies[i]);
 		}
 	});
 });
