@@ -1,4 +1,4 @@
-FROM node:argon
+FROM node:boron
 LABEL Description="Provides crud interface and response to taco-bot commands" \
 Vendor="Krakenfall" Version="1.0"
 
