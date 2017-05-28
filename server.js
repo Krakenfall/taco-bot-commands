@@ -107,7 +107,7 @@ db.connect(config.mongoConnectionString, function(err) {
 	});
 
 	bot.on('ready', () => {
-	  apputil.log('Discord bot ready');
+	  apputil.log('Discord bot ready', null, true);
 	});
 });
 
