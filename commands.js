@@ -45,70 +45,38 @@ var pickRandom = function(cmdObject) {
 	return rnged[0];
 }
 
-var searchByName = function(name, array) {
-	for (var i = 0; i < array.length; i++) {
-		if (array[i].name === name) {
-			return array[i]
+var processCommands = function(inputCommands, commands, callback) {
+	var replies = [];	
+	for (var i = 0; i < inputCommands.length; i++) {
+		var result = commands.find(o => o.name === inputCommands[i].toLowerCase());
+		if (result) {
+			var reply;
+			if (result.selectRandom) {
+				reply = pickRandom(result);
+			} else {
+				reply = result.value[0];
+			}
+			if (reply) {
+				replies.push(reply);
+			}
+		} else {
+			apputil.log(`Command not found: ${inputCommands[i].toLowerCase()}`);
 		}
 	}
+	callback(null, replies);
 };
-
-var processCommand = function(inputCommand, commands, post) {
-	var result = searchByName(inputCommand.toLowerCase(), commands);
-	if (result) {
-		var reply;
-		if (result.selectRandom) {
-			reply = pickRandom(result);
-		} else {
-			reply = result.value[0];
-		}
-		if (reply) {
-			apputil.groupme_text_post(reply, post.group_id, function(e, r){
-				if (!e) {
-					apputil.log(r);
-				} else {
-					apputil.log(e);
-				}
-			});
-		} else {
-			apputil.log(`Failed to select a reply to command ${inputCommand.toLowerCase()}`);
-		}
-	} else {
-		apputil.log(`Command from ${post.name} (ID: ${post.sender_id}) not found: ${inputCommand.toLowerCase()}`);
-	}
-};
-
-// Check for known ignored accounts (bots, kuranden, etc)
-// TODO: Move some of this into configuration maybe?
-var isIgnoredAccount = function(groupmePost) {
-	var senderId = groupmePost.sender_id;
-	var senderType = groupmePost.sender_type;
-
-	return senderId === "329044"
-		|| senderId === "329214"
-		|| senderId === "356826"
-		|| senderType === "bot" // ignore all bot posts, we may want to relax this restriction in the future
-}
 
 module.exports = {
 
-	investigate: function(groupmePost) {
-		if (isIgnoredAccount(groupmePost))
-		{
-			// if the account is an ignored account don't do anything more with the
-			// post
-			return;
-		}
-
-		// find commands in the text of the groupme message and process them
-		parseMessage(groupmePost.text, function(err, inputCommands) {			
+	investigate: function(text, callback) {
+		parseMessage(text, function(err, inputCommands) {			
 			db.get().collection("commands").find().toArray(function(error, commands) {
 				if (error) {
 					apputil.log(`Error retrieving commands: ${error}`);
 				} else {
-					for (var i = 0; i < inputCommands.length; i++) {
-						processCommand(inputCommands[i], commands, groupmePost);
-					}
+					processCommands(inputCommands, commands, function(err, replies){
+						callback(err, replies);
+					});
 				}
 			});
 		});
