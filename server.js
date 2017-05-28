@@ -62,7 +62,21 @@ app.get("/commands", function(req, res) {
 // Receive messages from groupme bot api
 app.post("/command", function(req, res) {
 	res.writeHead(200);
-	res.end(commandsController.investigate(req.body));
+	if (!apputil.isIgnoredGroupMeAccount(req.body))
+	{
+		commandsController.investigate(req.body.text, function(err, replies){			
+			for(var i = 0; i < replies.length; i++) {
+				apputil.groupme_text_post(replies[i], req.body.group_id, function(e, r){
+					if (!e) {
+						apputil.log(r);
+					} else {
+						apputil.log(e);
+					}
+				});
+			}		
+		});
+	}
+	res.end();
 });
 
 // Handle Error response
