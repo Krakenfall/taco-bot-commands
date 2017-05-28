@@ -46,21 +46,23 @@ var pickRandom = function(cmdObject) {
 }
 
 var processCommands = function(inputCommands, commands, callback) {
-	var replies = [];	
-	for (var i = 0; i < inputCommands.length; i++) {
-		var result = commands.find(o => o.name === inputCommands[i].toLowerCase());
-		if (result) {
-			var reply;
-			if (result.selectRandom) {
-				reply = pickRandom(result);
+	var replies = [];
+	if (inputCommands){
+		for (var i = 0; i < inputCommands.length; i++) {
+			var result = commands.find(o => o.name === inputCommands[i].toLowerCase());
+			if (result) {
+				var reply;
+				if (result.selectRandom) {
+					reply = pickRandom(result);
+				} else {
+					reply = result.value[0];
+				}
+				if (reply) {
+					replies.push(reply);
+				}
 			} else {
-				reply = result.value[0];
+				apputil.log(`Command not found: ${inputCommands[i].toLowerCase()}`);
 			}
-			if (reply) {
-				replies.push(reply);
-			}
-		} else {
-			apputil.log(`Command not found: ${inputCommands[i].toLowerCase()}`);
 		}
 	}
 	callback(null, replies);
