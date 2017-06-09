@@ -66,15 +66,19 @@ app.post("/command", function(req, res) {
 	res.writeHead(200);
 	if (!apputil.isIgnoredGroupMeAccount(req.body))
 	{
-		commandsController.investigate(req.body.text, function(err, replies){			
-			for(var i = 0; i < replies.length; i++) {
-				apputil.groupme_text_post(replies[i], req.body.group_id, function(e, r){
-					if (!e) {
-						apputil.log(r);
-					} else {
-						apputil.log(e);
-					}
-				});
+		commandsController.investigate(req.body.text, function(err, replies){
+			if (err) {
+				apputil.log(`${err}`);
+			} else {
+				for(var i = 0; i < replies.length; i++) {
+					apputil.groupme_text_post(replies[i], req.body.group_id, function(e, r){
+						if (!e) {
+							apputil.log(r);
+						} else {
+							apputil.log(e);
+						}
+					});
+				}
 			}		
 		});
 	}
@@ -88,9 +92,13 @@ app.use(function(err, req, res, next) {
 });
 
 bot.on("message", msg => {
-	commandsController.investigate(msg.content, function(err, replies){		
-		for(var i = 0; i < replies.length; i++) {
-			msg.channel.sendMessage(replies[i]);
+	commandsController.investigate(msg.content, function(err, replies){
+		if (err) {
+			apputil.log(`${err}`);
+		} else {
+			for(var i = 0; i < replies.length; i++) {
+				msg.channel.sendMessage(replies[i]);
+			}
 		}
 	});
 });
