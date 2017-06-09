@@ -84,6 +84,30 @@ var processCommands = function(inputCommands, commands, text, callback) {
 						else { callback(null, [reply]); }
 					});
 					break;
+				case "pvesummary" :
+					destinyCmds.pveSummary('1', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvesummary: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pvesummarypsn" :
+					destinyCmds.pveSummary('2', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvesummarypsn: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pvekills" :
+					destinyCmds.pveKills('1', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvekills: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pvekillspsn" :
+					destinyCmds.pveKills('2', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvekillspsn: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
 				case "pvpsummary" :
 					destinyCmds.pvpSummary('1', arg, function(err, reply){
 						if (err) { apputil.log(`Error getting pvpsummary: ${err}`); callback(null, [result.value]); }
