@@ -99,10 +99,84 @@ module.exports = {
             } else { callback(err); }
         });
     },
+    pveSummary : function(membershipType, username, callback) {
+        retrieveAccountStats(membershipType, username, function(err, stats) {
+            if (!err) {
+                var response = `Destiny PvE Summary for ${username}:\r\n`;
+                var pveAllTimeStats = stats.mergedAllCharacters.results.allPvE.allTime;
+                var pvePlayTime = pveAllTimeStats.secondsPlayed.basic.displayValue;
+                var pveGamesPlayed = pveAllTimeStats.activitiesEntered.basic.displayValue;
+                response = `${response}* PvE play time: ${pvePlayTime}, ${pveGamesPlayed} activities played\r\n`;
+
+                var kills = pveAllTimeStats.kills.basic.displayValue;
+                var deaths = pveAllTimeStats.deaths.basic.displayValue;
+                var kdRatio = pveAllTimeStats.killsDeathsRatio.basic.displayValue;
+                response = `${response}* ${kills} kills, ${deaths} deaths, ${kdRatio} K/D\r\n`;
+                
+                var assists = pveAllTimeStats.assists.basic.displayValue;
+                var kdaRatio = pveAllTimeStats.killsDeathsAssists.basic.displayValue;
+                response = `${response}* ${assists} assists, ${kdaRatio} K/D+A\r\n`;
+
+                var revives = pveAllTimeStats.resurrectionsPerformed.basic.displayValue;
+                var revived = pveAllTimeStats.resurrectionsReceived.basic.displayValue;
+                var suicides = pveAllTimeStats.suicides.basic.displayValue;
+                response = `${response}* ${revives} revives, revived ${revived} times, ${suicides} suicides\r\n`;
+
+                var orbsGathered = pveAllTimeStats.orbsGathered.basic.displayValue;
+                var orbsDropped = pveAllTimeStats.orbsDropped.basic.displayValue;
+                var suicides = pveAllTimeStats.suicides.basic.displayValue;
+                response = `${response}* ${orbsDropped} orbs dropped, ${orbsGathered} orbs picked up\r\n`;
+
+                var publicEventsCompleted = pveAllTimeStats.publicEventsCompleted.basic.displayValue;
+                var publicEventsJoined = pveAllTimeStats.publicEventsJoined.basic.displayValue;
+                response = `${response}* ${publicEventsCompleted} public events completed, ${publicEventsJoined} public events joined\r\n`;
+                
+                var coOAttempts = pveAllTimeStats.courtOfOryxAttempts.basic.displayValue;
+                var coOWinsCompletions = pveAllTimeStats.courtOfOryxCompletions.basic.displayValue;
+                var coOWinsTier3 = pveAllTimeStats.courtOfOryxWinsTier3.basic.displayValue;
+                response = `${response}Court of Oryx attempts:\r\n`;
+                response = `${response}* ${coOAttempts} attempts, ${coOWinsCompletions} completions, ${coOWinsTier3} tier 3 completions\r\n`;
+                
+                callback(null, response);
+            } else { callback(err); }
+        });
+    },
+    pveKills : function(membershipType, username, callback) {
+        retrieveAccountStats(membershipType, username, function(err, stats) {
+            if (!err) {
+                var response = `${username}\'s Destiny PvE kill stats:\r\n`;
+                var pveAllTimeStats = stats.mergedAllCharacters.results.allPvE.allTime;
+                var kills = pveAllTimeStats.kills.basic.displayValue;
+                var kdRatio = pveAllTimeStats.killsDeathsRatio.basic.displayValue;
+                response = `${response}* Total Kills: ${kills}, ${kdRatio} K/D\r\n`;
+                
+                var superKills = pveAllTimeStats.weaponKillsSuper.basic.displayValue;
+                var abilityKills = pveAllTimeStats.abilityKills.basic.displayValue;
+                response = `${response}* ${superKills} super kills, ${abilityKills} ability kills\r\n`;
+                
+                var meleeKills = pveAllTimeStats.weaponKillsMelee.basic.displayValue;
+                var grenadeKills = pveAllTimeStats.weaponKillsGrenade.basic.displayValue;
+                response = `${response}* ${meleeKills} melee kills, ${grenadeKills} grenade kills\r\n`;
+
+                var defKills = pveAllTimeStats.defensiveKills.basic.displayValue;
+                var offKills = pveAllTimeStats.offensiveKills.basic.displayValue;
+                var precisionKills = pveAllTimeStats.precisionKills.basic.displayValue;
+                response = `${response}* ${offKills} offensive kills, ${defKills} defensive kills, ${precisionKills} precision kills\r\n`;
+
+                response = `${response}* Best single activity kills: ${pveAllTimeStats.bestSingleGameKills.basic.displayValue}\r\n`;
+                response = `${response}* Longest killing spree: ${pveAllTimeStats.longestKillSpree.basic.displayValue}\r\n`;
+                response = `${response}* Most precision kills: ${pveAllTimeStats.mostPrecisionKills.basic.displayValue}\r\n`;
+                response = `${response}* Longest kill distance: ${pveAllTimeStats.longestKillDistance.basic.displayValue}\r\n`;
+                response = `${response}* Average kill distance: ${pveAllTimeStats.averageKillDistance.basic.displayValue}\r\n`;
+                
+                callback(null, response);
+            } else { callback(err); }
+        });
+    },
     pvpSummary : function(membershipType, username, callback) {
         retrieveAccountStats(membershipType, username, function(err, stats) {
             if (!err) {
-                var response = `Destiny PvP with ${username}:\r\n`;
+                var response = `Destiny PvP Summary for ${username}:\r\n`;
                 var pvpAllTimeStats = stats.mergedAllCharacters.results.allPvP.allTime;
                 var pvpPlayTime = pvpAllTimeStats.secondsPlayed.basic.displayValue;
                 var pvpGamesPlayed = pvpAllTimeStats.activitiesEntered.basic.displayValue;
@@ -167,6 +241,7 @@ module.exports = {
                 response = `${response}* Longest killing spree: ${pvpAllTimeStats.longestKillSpree.basic.displayValue}\r\n`;
                 response = `${response}* Most precision kills: ${pvpAllTimeStats.mostPrecisionKills.basic.displayValue}\r\n`;
                 response = `${response}* Longest kill distance: ${pvpAllTimeStats.longestKillDistance.basic.displayValue}\r\n`;
+                response = `${response}* Average kill distance: ${pvpAllTimeStats.averageKillDistance.basic.displayValue}\r\n`;
                 
                 callback(null, response);
             } else { callback(err); }
