@@ -1,6 +1,7 @@
 var fs = require('fs');
 var http = require('http');
 var request = require('request');
+var destinyCmds = require('./bungieApiCommands.js');
 var apputil = require("./util.js");
 var db = require('./db.js');
 var Promise = require('bluebird');
@@ -40,32 +41,86 @@ var parseMessage = function(message, callback) {
 	callback(null, matches);
 };
 
+var parseUtilityCommands = function(command, message) {
+	return message.replace(`!${command} `, '');
+};
+
 var pickRandom = function(cmdObject) {
 	var rnged = apputil.shuffle(cmdObject.value);
 	return rnged[0];
 }
 
-var processCommands = function(inputCommands, commands, callback) {
-	var replies = [];
-	if (inputCommands){
-		for (var i = 0; i < inputCommands.length; i++) {
-			var result = commands.find(o => o.name === inputCommands[i].toLowerCase());
-			if (result) {
-				var reply;
-				if (result.selectRandom) {
-					reply = pickRandom(result);
-				} else {
-					reply = result.value[0];
-				}
-				if (reply) {
-					replies.push(reply);
-				}
-			} else {
-				apputil.log(`Command not found: ${inputCommands[i].toLowerCase()}`);
+var processCommands = function(inputCommands, commands, text, callback) {
+	if (inputCommands) {
+		// If command needs arguments, it must be the first thing in the comment
+		if (inputCommands.length == 1 && 
+			text.indexOf('!') == 0 &&
+			commands.find(o => o.name === inputCommands[0].toLowerCase()).requiresArgs) {
+
+			var result = commands.find(o => o.name === inputCommands[0].toLowerCase());
+			var arg = parseUtilityCommands(inputCommands[0], text);
+			switch(result.name) {
+				case "grimoirescore" :
+					destinyCmds.grimoireScore('1', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting grimoirescore: ${err}`); callback(null, [result.value[0]]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "grimoirescorepsn" :
+					destinyCmds.grimoireScore('2', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting grimoirescorepsn: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "playtime" :
+					destinyCmds.playTime('1', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting playtime: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "playtimepsn" :
+					destinyCmds.playTime('2', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting playtimepsn: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pvpsummary" :
+					destinyCmds.pvpSummary('1', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvpsummary: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pvpsummarypsn" :
+					destinyCmds.pvpSummary('2', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvpsummarypsn: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				default :
+					apputil.log(`Command ${result.name} not handled here. Is the requiresArgs setting correct?`);
+					break;
 			}
-		}
+		} else {
+			var replies = [];
+			for (var i = 0; i < inputCommands.length; i++) {
+				var result = commands.find(o => o.name === inputCommands[i].toLowerCase());
+				if (result) {
+					var reply;
+					if (result.selectRandom) {
+						reply = pickRandom(result);
+					} else {
+						reply = result.value[0];
+					}
+					if (reply) {
+						replies.push(reply);
+					}
+				} else {
+					apputil.log(`Command not found: ${inputCommands[i].toLowerCase()}`);
+				}
+			}
+			callback(null, replies);
+		}	
 	}
-	callback(null, replies);
 };
 
 module.exports = {
@@ -76,7 +131,7 @@ module.exports = {
 				if (error) {
 					apputil.log(`Error retrieving commands: ${error}`);
 				} else {
-					processCommands(inputCommands, commands, function(err, replies){
+					processCommands(inputCommands, commands, text, function(err, replies){
 						callback(err, replies);
 					});
 				}
