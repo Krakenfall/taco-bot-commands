@@ -96,6 +96,18 @@ var processCommands = function(inputCommands, commands, text, callback) {
 						else { callback(null, [reply]); }
 					});
 					break;
+				case "pvpkills" :
+					destinyCmds.pvpKills('1', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvpkills: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pvpkillspsn" :
+					destinyCmds.pvpKills('2', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvpkillspsn: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
 				default :
 					apputil.log(`Command ${result.name} not handled here. Is the requiresArgs setting correct?`);
 					break;
