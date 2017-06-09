@@ -92,15 +92,17 @@ app.use(function(err, req, res, next) {
 });
 
 bot.on("message", msg => {
-	commandsController.investigate(msg.content, function(err, replies){
-		if (err) {
-			apputil.log(`${err}`);
-		} else {
-			for(var i = 0; i < replies.length; i++) {
-				msg.channel.sendMessage(replies[i]);
+	if (msg.author.id != config.discord.ClientId) {
+		commandsController.investigate(msg.content, function(err, replies){
+			if (err) {
+				apputil.log(`${err}`);
+			} else {
+				for(var i = 0; i < replies.length; i++) {
+					msg.channel.sendMessage(replies[i]);
+				}
 			}
-		}
-	});
+		});
+	}
 });
 
 db.connect(config.mongoConnectionString, function(err) {
