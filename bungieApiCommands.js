@@ -158,16 +158,11 @@ module.exports = {
                 var grenadeKills = pveAllTimeStats.weaponKillsGrenade.basic.displayValue;
                 response = `${response}* ${meleeKills} melee kills, ${grenadeKills} grenade kills\r\n`;
 
-                var defKills = pveAllTimeStats.defensiveKills.basic.displayValue;
-                var offKills = pveAllTimeStats.offensiveKills.basic.displayValue;
-                var precisionKills = pveAllTimeStats.precisionKills.basic.displayValue;
-                response = `${response}* ${offKills} offensive kills, ${defKills} defensive kills, ${precisionKills} precision kills\r\n`;
-
                 response = `${response}* Best single activity kills: ${pveAllTimeStats.bestSingleGameKills.basic.displayValue}\r\n`;
                 response = `${response}* Longest killing spree: ${pveAllTimeStats.longestKillSpree.basic.displayValue}\r\n`;
                 response = `${response}* Most precision kills: ${pveAllTimeStats.mostPrecisionKills.basic.displayValue}\r\n`;
-                response = `${response}* Longest kill distance: ${pveAllTimeStats.longestKillDistance.basic.displayValue}\r\n`;
-                response = `${response}* Average kill distance: ${pveAllTimeStats.averageKillDistance.basic.displayValue}\r\n`;
+                response = `${response}* Longest kill distance: ${pveAllTimeStats.longestKillDistance.basic.displayValue}m\r\n`;
+                response = `${response}* Average kill distance: ${pveAllTimeStats.averageKillDistance.basic.displayValue}m\r\n`;
                 
                 callback(null, response);
             } else { callback(err); }
