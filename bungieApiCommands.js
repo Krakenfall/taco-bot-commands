@@ -136,7 +136,11 @@ module.exports = {
         retrieveAccountSummary(membershipType, username, function(err, summary) {
             if (!err) {
                 callback(null, `${username} has played Destiny for ${timePlayedTotalInHrs(summary.characters)} hours on ${getPlatform(membershipType)}`);
-            } else { callback(err); }
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
         });
     },
     pveSummary : function(membershipType, username, callback) {
@@ -178,7 +182,11 @@ module.exports = {
                 response = `${response}* ${coOAttempts} attempts, ${coOWinsCompletions} completions, ${coOWinsTier3} tier 3 completions\r\n`;
                 
                 callback(null, response);
-            } else { callback(err); }
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
         });
     },
     pveKills : function(membershipType, username, callback) {
@@ -205,7 +213,11 @@ module.exports = {
                 response = `${response}* Average kill distance: ${pveAllTimeStats.averageKillDistance.basic.displayValue}m\r\n`;
                 
                 callback(null, response);
-            } else { callback(err); }
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
         });
     },
     pvpSummary : function(membershipType, username, callback) {
@@ -237,7 +249,11 @@ module.exports = {
                 response = `${response}* ${wins} wins, ${winLoss} win/loss ratio, ${combatRating} combat rating\r\n`;
                 
                 callback(null, response);
-            } else { callback(err); }
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
         });
     },
     pvpKdRatio : function(membershipType, username, callback) {
@@ -248,7 +264,11 @@ module.exports = {
                 var kdRatio = pvpAllTimeStats.killsDeathsRatio.basic.displayValue;
                 var response = `${username} KD ratio is ${kdRatio} (${kills} kills/${deaths} deaths)`;                
                 callback(null, response);
-            } else { callback(err); }
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
         });
     },
     pvpKills : function(membershipType, username, callback) {
@@ -279,7 +299,11 @@ module.exports = {
                 response = `${response}* Average kill distance: ${pvpAllTimeStats.averageKillDistance.basic.displayValue}\r\n`;
                 
                 callback(null, response);
-            } else { callback(err); }
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
         });
     },
     trialsMap : function(callback) { callback("FeatureNotImplemented")}
