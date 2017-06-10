@@ -108,6 +108,18 @@ var processCommands = function(inputCommands, commands, text, callback) {
 						else { callback(null, [reply]); }
 					});
 					break;
+				case "pveweaponkills" :
+					destinyCmds.pveWeapons('1', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pveweaponkills: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pveweaponkillspsn" :
+					destinyCmds.pveWeapons('2', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pveweaponkillspsn: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
 				case "pvpsummary" :
 					destinyCmds.pvpSummary('1', arg, function(err, reply){
 						if (err) { apputil.log(`Error getting pvpsummary: ${err}`); callback(null, [result.value]); }
@@ -129,6 +141,18 @@ var processCommands = function(inputCommands, commands, text, callback) {
 				case "pvpkillspsn" :
 					destinyCmds.pvpKills('2', arg, function(err, reply){
 						if (err) { apputil.log(`Error getting pvpkillspsn: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pvpweaponkills" :
+					destinyCmds.pvpWeapons('1', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvpweaponkills: ${err}`); callback(null, [result.value]); }
+						else { callback(null, [reply]); }
+					});
+					break;
+				case "pvpweaponkillspsn" :
+					destinyCmds.pvpWeapons('2', arg, function(err, reply){
+						if (err) { apputil.log(`Error getting pvpweaponkillspsn: ${err}`); callback(null, [result.value]); }
 						else { callback(null, [reply]); }
 					});
 					break;

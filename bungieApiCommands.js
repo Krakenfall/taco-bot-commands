@@ -220,6 +220,49 @@ module.exports = {
             }
         });
     },
+    pveWeapons : function(membershipType, username, callback) {
+        retrieveAccountStats(membershipType, username, function(err, stats) {
+            if (!err) {
+                var response = `${username}\'s Destiny weapon kill stats in PvE:\r\n`;
+                var pveAllTimeStats = stats.mergedAllCharacters.results.allPvE.allTime;
+                
+                var autoRifle = pveAllTimeStats.weaponKillsAutoRifle.basic;
+                var handCannon = pveAllTimeStats.weaponKillsHandCannon.basic;
+                var pulseRifle = pveAllTimeStats.weaponKillsPulseRifle.basic;
+                var scoutRifle = pveAllTimeStats.weaponKillsScoutRifle.basic;
+                var fusionRifle = pveAllTimeStats.weaponKillsFusionRifle.basic;
+                var shotgun = pveAllTimeStats.weaponKillsShotgun.basic;
+                var sniper = pveAllTimeStats.weaponKillsSniper.basic;
+                var sideArm = pveAllTimeStats.weaponKillsSideArm.basic;
+                var machineGun = pveAllTimeStats.weaponKillsMachinegun.basic;
+                var rocketLauncher = pveAllTimeStats.weaponKillsRocketLauncher.basic;
+                var sword = pveAllTimeStats.weaponKillsSword.basic;
+                var relic = pveAllTimeStats.weaponKillsRelic.basic;
+
+                var bestWeaponType = pveAllTimeStats.weaponBestType.basic.displayValue;
+
+                var weaponKills = autoRifle.value + fusionRifle.value + handCannon.value 
+                    + machineGun.value + pulseRifle.value + rocketLauncher.value 
+                    + scoutRifle.value + shotgun.value + sniper.value + relic.value 
+                    + sideArm.value + sword.value;
+
+                response = `${response}* Total Weapon Kills: ${weaponKills}\r\n`;
+                response = `${response}* Best Weapon: ${bestWeaponType}\r\n`;
+                response = `${response}* ${autoRifle.displayValue} Auto Rifle, ${handCannon.displayValue} Hand Cannon\r\n`;
+                response = `${response}* ${pulseRifle.displayValue} Pulse Rifle, ${scoutRifle.displayValue} Scout Rifle\r\n`;
+                response = `${response}* ${fusionRifle.displayValue} Fusion Rifle, ${shotgun.displayValue} Shotgun\r\n`;
+                response = `${response}* ${sniper.displayValue} Sniper Rifle, ${sideArm.displayValue} Side Arm\r\n`;
+                response = `${response}* ${machineGun.displayValue} Machine Gun, ${rocketLauncher.displayValue} Rocket Launcher\r\n`;
+                response = `${response}* ${sword.displayValue} Sword\r\n`;
+                response = `${response}* ${relic.displayValue} Relic\\Slam\r\n`;
+                callback(null, response);
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
+        });
+    },
     pvpSummary : function(membershipType, username, callback) {
         retrieveAccountStats(membershipType, username, function(err, stats) {
             if (!err) {
@@ -298,6 +341,49 @@ module.exports = {
                 response = `${response}* Longest kill distance: ${pvpAllTimeStats.longestKillDistance.basic.displayValue}m\r\n`;
                 response = `${response}* Average kill distance: ${pvpAllTimeStats.averageKillDistance.basic.displayValue}m\r\n`;
                 
+                callback(null, response);
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
+        });
+    },
+    pvpWeapons : function(membershipType, username, callback) {
+        retrieveAccountStats(membershipType, username, function(err, stats) {
+            if (!err) {
+                var response = `${username}\'s Destiny weapon kill stats in PvP:\r\n`;
+                var pvpAllTimeStats = stats.mergedAllCharacters.results.allPvP.allTime;
+                
+                var autoRifle = pvpAllTimeStats.weaponKillsAutoRifle.basic;
+                var handCannon = pvpAllTimeStats.weaponKillsHandCannon.basic;
+                var pulseRifle = pvpAllTimeStats.weaponKillsPulseRifle.basic;
+                var scoutRifle = pvpAllTimeStats.weaponKillsScoutRifle.basic;
+                var fusionRifle = pvpAllTimeStats.weaponKillsFusionRifle.basic;
+                var shotgun = pvpAllTimeStats.weaponKillsShotgun.basic;
+                var sniper = pvpAllTimeStats.weaponKillsSniper.basic;
+                var sideArm = pvpAllTimeStats.weaponKillsSideArm.basic;
+                var machineGun = pvpAllTimeStats.weaponKillsMachinegun.basic;
+                var rocketLauncher = pvpAllTimeStats.weaponKillsRocketLauncher.basic;
+                var sword = pvpAllTimeStats.weaponKillsSword.basic;
+                var relic = pvpAllTimeStats.weaponKillsRelic.basic;
+
+                var bestWeaponType = pvpAllTimeStats.weaponBestType.basic.displayValue;
+
+                var weaponKills = autoRifle.value + fusionRifle.value + handCannon.value 
+                    + machineGun.value + pulseRifle.value + rocketLauncher.value 
+                    + scoutRifle.value + shotgun.value + sniper.value + relic.value 
+                    + sideArm.value + sword.value;
+
+                response = `${response}* Total Weapon Kills: ${weaponKills}\r\n`;
+                response = `${response}* Best Weapon: ${bestWeaponType}\r\n`;
+                response = `${response}* ${autoRifle.displayValue} Auto Rifle, ${handCannon.displayValue} Hand Cannon\r\n`;
+                response = `${response}* ${pulseRifle.displayValue} Pulse Rifle, ${scoutRifle.displayValue} Scout Rifle\r\n`;
+                response = `${response}* ${fusionRifle.displayValue} Fusion Rifle, ${shotgun.displayValue} Shotgun\r\n`;
+                response = `${response}* ${sniper.displayValue} Sniper Rifle, ${sideArm.displayValue} Side Arm\r\n`;
+                response = `${response}* ${machineGun.displayValue} Machine Gun, ${rocketLauncher.displayValue} Rocket Launcher\r\n`;
+                response = `${response}* ${sword.displayValue} Sword\r\n`;
+                response = `${response}* ${relic.displayValue} Relic\\Slam\r\n`;
                 callback(null, response);
             } else {
                 var errMessage = checkError(err, username, membershipType);
