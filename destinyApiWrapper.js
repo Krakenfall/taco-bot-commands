@@ -26,11 +26,22 @@ module.exports = {
         var accountIdUri = `${bungieApiUrl}/${membershipType}/Stats/GetMembershipIdByDisplayName/${username}/`;
         getInfo(accountIdUri, function (err, membershipId) {
             if (err) {
-                callback(`Failed getMembershipId: ${err}`);
+                callback(err);
             } else if (membershipId === 0 || membershipId === "0") {
                 callback(`Character ${username} not found.`)
             } else {
                 callback(null, membershipId);
+            }
+        });
+    },
+
+    getGrimoire : function(membershipType, membershipId, callback) {
+        var grimoireUri = `${bungieApiUrl}/Vanguard/Grimoire/${membershipType}/${membershipId}/`;
+        getInfo(grimoireUri, function (err, grimoire) {
+            if (err) {
+                callback(`Failed getGrimoire: ${err}`);
+            }  else {
+                callback(null, grimoire);
             }
         });
     },

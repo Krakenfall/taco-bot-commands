@@ -1,5 +1,16 @@
 var api = require("./destinyApiWrapper.js");
 
+var checkError = function (err, username, membershipType) {
+    // Add responses for known errors in else if statements
+    if (err.indexOf('217') > -1 && err.indexOf('UserCannotResolveCentralAccount') > -1) {
+        var response = `Could not find information for user \'${username}\' on ${getPlatform(membershipType)}.\r\n`;
+        response = `${response}Be sure to use the exact username, including spaces and capital letters.`
+        return response;
+    } else {
+        return null;
+    }
+};
+
 var getGender = function (character) {
     if (character.characterBase.genderType === 0) {
         return "Male";
@@ -7,12 +18,15 @@ var getGender = function (character) {
         return "Female";
     }
 };
-var timePlayedTotalInHrs = function (characters) {
-    var timePlayed = 0;
-    for (var i = 0; i < characters.length; i++) {
-        timePlayed += parseInt(characters[i].characterBase.minutesPlayedTotal);
+
+var getPlatform = function(membershipType) {
+    if (membershipType === '1') { 
+        return "Xbox"; 
+    } else if (membershipType === '2') { 
+        return "Playstation"; 
+    } else {
+        return "Uh...some platform other than Xbox or Playstation...? This doesn't make sense.";
     }
-    return Math.round(timePlayed / 60);
 };
 
 var retrieveAccountSummary = function (membershipType, username, callback) {
@@ -56,6 +70,22 @@ var retrieveAdvisorData = function (callback) {
     });
 };
 
+var retrieveGrimoire = function (membershipType, username, callback) {
+    api.getMembershipId(membershipType, username, function(err, id) {
+        if (!err) {
+            api.getGrimoire(
+                membershipType, id, function(err, info) {
+                if (!err) {                    
+                    callback(null, info.data);
+                } else {
+                    callback(err);
+                }
+            });
+        }
+        else { callback(err); } 
+    });
+};
+
 var sortCharactersByTimeAscending = function(characters) {
     // Sort by milliseconds time
     return characters.sort(function sortNum (a,b) { 
@@ -72,6 +102,14 @@ var sortCharactersByTimeDescending = function(characters) {
     });
 };
 
+var timePlayedTotalInHrs = function (characters) {
+    var timePlayed = 0;
+    for (var i = 0; i < characters.length; i++) {
+        timePlayed += parseInt(characters[i].characterBase.minutesPlayedTotal);
+    }
+    return Math.round(timePlayed / 60);
+};
+
 module.exports = {
 
     nightfall: function(callback) {
@@ -84,18 +122,20 @@ module.exports = {
         });
     },
     grimoireScore : function(membershipType, username, callback) {
-        retrieveAccountSummary(membershipType, username, function(err, summary) {
+        retrieveGrimoire(membershipType, username, function(err, grimoire) {
             if (!err) {
-                callback(null, `${username}\'s grimoire score is ${summary.grimoireScore}`);
-            } else { callback(err); }
+                callback(null, `${username}\'s grimoire score is ${grimoire.score}`);
+            } else {
+                var errMessage = checkError(err, username, membershipType);
+                if (errMessage) { callback(null, errMessage); } 
+                else { callback(err); } 
+            }
         });
     },
     playTime : function(membershipType, username, callback) {
         retrieveAccountSummary(membershipType, username, function(err, summary) {
             if (!err) {
-                var platform = "";
-                if (membershipType === '1') { platform = "Xbox"; } else { platform = "Playstation"; }
-                callback(null, `${username} has played Destiny for ${timePlayedTotalInHrs(summary.characters)} hours on ${platform}`);
+                callback(null, `${username} has played Destiny for ${timePlayedTotalInHrs(summary.characters)} hours on ${getPlatform(membershipType)}`);
             } else { callback(err); }
         });
     },
