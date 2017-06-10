@@ -295,8 +295,8 @@ module.exports = {
                 response = `${response}* Best single game kills: ${pvpAllTimeStats.bestSingleGameKills.basic.displayValue}\r\n`;
                 response = `${response}* Longest killing spree: ${pvpAllTimeStats.longestKillSpree.basic.displayValue}\r\n`;
                 response = `${response}* Most precision kills: ${pvpAllTimeStats.mostPrecisionKills.basic.displayValue}\r\n`;
-                response = `${response}* Longest kill distance: ${pvpAllTimeStats.longestKillDistance.basic.displayValue}\r\n`;
-                response = `${response}* Average kill distance: ${pvpAllTimeStats.averageKillDistance.basic.displayValue}\r\n`;
+                response = `${response}* Longest kill distance: ${pvpAllTimeStats.longestKillDistance.basic.displayValue}m\r\n`;
+                response = `${response}* Average kill distance: ${pvpAllTimeStats.averageKillDistance.basic.displayValue}m\r\n`;
                 
                 callback(null, response);
             } else {
