@@ -1,0 +1,14 @@
+{
+  "domain": "__SiteDomain__",
+  "port": __ApiPort__,
+  "tacoBotWebUrl": "__TacoBotWebUrl__",
+  "mongoConnectionString": "__MongoConnectionString__",
+  "discord": {
+    "ClientId": "__DiscordClientId__",
+    "Secret": "__DiscordSecretId__",
+    "token": "__DiscordToken__"
+  },
+  "bungieApi": {
+    "key": "__BungieApiKey__"
+  }
+}
