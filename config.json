@@ -3,10 +3,6 @@
   "port": __ApiPort__,
   "tacoBotWebUrl": "__TacoBotWebUrl__",
   "mongoConnectionString": "__MongoConnectionString__",
-  "bot": {
-    "id": "__GroupMeBotId__",
-    "groupId": "__GroupMeGroupId__"
-  },
   "discord": {
     "ClientId": "__DiscordClientId__",
     "Secret": "__DiscordSecretId__",
