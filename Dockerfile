@@ -2,6 +2,8 @@ FROM node:boron
 LABEL Description="Provides crud interface and response to taco-bot commands" \
 Vendor="Krakenfall" Version="1.0"
 
+ARG API_PORT=9003
+
 RUN mkdir -p /bot/app
 WORKDIR /bot/app
 
@@ -14,6 +16,6 @@ COPY . /bot/app
 
 RUN export TZ=America/Los_Angeles
 
-EXPOSE 9003
+EXPOSE $API_PORT
 
 CMD ["npm", "start"]
